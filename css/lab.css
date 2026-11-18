@@ -1,0 +1,931 @@
+/* ==========================================================================
+   LAB.CSS — ส่วนเสริมของ TATAR PORTFOLIO
+   1. PLAYABLE WORK CARDS (การ์ดผลงานที่กดเล่นได้)
+   2. LAB DIALOG SHELL (หน้าต่างแล็บ)
+   3. CYBER-YANTRA GENERATOR (เครื่องสร้างยันต์)
+   4. ENERGY PLAYGROUND (สนามทดลองฟิสิกส์พลังงาน)
+   5. DESIGN NOTES SECTION (เบื้องหลังการออกแบบ)
+   6. RESPONSIVE
+   ========================================================================== */
+
+/* ==========================================================================
+   1. PLAYABLE WORK CARDS
+   ========================================================================== */
+.work-card.is-playable {
+  cursor: pointer;
+}
+
+.work-card.is-playable .work-visual::before {
+  content: "▶ PLAY";
+  position: absolute;
+  z-index: 4;
+  right: 10px;
+  top: 10px;
+  padding: 0.15rem 0.4rem;
+  background: var(--ink);
+  color: var(--acid);
+  border: 1px solid var(--acid);
+  font: 700 0.57rem var(--mono);
+  letter-spacing: 0.08em;
+}
+
+.work-launch {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.8rem;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--acid);
+  font: 700 0.7rem var(--mono);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--purple);
+  transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
+}
+
+.work-launch:hover,
+.work-card.is-playable:hover .work-launch {
+  background: var(--acid);
+  color: var(--ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--purple);
+}
+
+html.lab-open {
+  overflow: hidden;
+}
+
+/* ---- บอกว่า "เล่นได้" แบบเรียบ ให้กลืนกับสไตล์เว็บ ---- */
+.work-card.is-playable .work-visual::before {
+  content: none; /* ใช้ .play-ribbon แทน */
+}
+
+.play-ribbon {
+  position: absolute;
+  z-index: 4;
+  top: 10px;
+  right: 10px;
+  padding: 0.15rem 0.4rem;
+  background: var(--ink);
+  color: var(--acid);
+  border: 1px solid var(--acid);
+  font: 700 0.62rem / 1.5 var(--thai-head, var(--mono));
+  letter-spacing: 0;
+}
+
+.play-overlay {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.5rem;
+  background: rgba(7, 7, 7, 0);
+  opacity: 0;
+  transition: opacity 0.25s, background 0.25s;
+}
+
+.play-overlay i {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--acid);
+  color: var(--ink);
+  font: normal 700 1.2rem / 1 var(--mono);
+  padding-left: 0.1em;
+}
+
+.play-overlay b {
+  padding: 0.15rem 0.5rem;
+  background: var(--ink);
+  color: var(--acid);
+  font: 700 0.78rem / 1.5 var(--thai-head, var(--mono));
+}
+
+/* ปุ่มกลางภาพอยู่ตำแหน่งเดียวกันทุกการ์ด (ยกขึ้นด้านบน ไม่ทับกล่อง terminal ของการ์ดยันต์) */
+.work-card.is-playable .play-overlay {
+  place-content: start center;
+  padding-top: 34px;
+}
+
+/* ดันปุ่มเล่นลงล่างสุดของการ์ด ให้ปุ่มของทุกการ์ดอยู่แนวเดียวกัน */
+.work-card.is-playable {
+  display: flex;
+  flex-direction: column;
+}
+
+.work-card.is-playable .work-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.work-card.is-playable .work-info > :not(.work-launch) {
+  align-self: stretch;
+}
+
+.work-card.is-playable .work-launch {
+  margin-top: auto;
+}
+
+.work-card.is-playable:hover .play-overlay,
+.work-card.is-playable:focus-within .play-overlay {
+  opacity: 1;
+  background: rgba(7, 7, 7, 0.35);
+}
+
+.play-meta {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+}
+
+.play-meta li {
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--line, rgba(7, 7, 7, 0.3));
+  font-size: 0.74rem;
+  line-height: 1.6;
+}
+
+.work-launch {
+  font-family: var(--thai-head, var(--mono));
+  font-size: 0.8rem;
+  letter-spacing: 0;
+}
+
+.works-play-hint {
+  display: block;
+  margin-top: 0.6rem;
+  font: 600 0.72rem / 1.6 var(--mono);
+  color: var(--deep, var(--purple));
+}
+
+/* เมนูมี 6 ลิงก์: ย่อระยะบนจอกลางไม่ให้เบียด brand / นาฬิกา */
+@media (max-width: 1180px) and (min-width: 901px) {
+  .topbar nav a {
+    padding: 0.35rem 0.4rem;
+    font-size: 0.66rem;
+  }
+}
+
+@media (max-width: 900px) {
+  /* เมนูอาจล้นจอ: safe center กันลิงก์แรกโดนตัดจนเลื่อนไม่ถึง */
+  .topbar nav {
+    justify-content: safe center;
+  }
+}
+
+@media (hover: none) {
+  /* จอสัมผัสไม่มี hover: โชว์แค่ปุ่มกลมเล็กไว้มุมล่าง */
+  .play-overlay {
+    opacity: 1;
+    place-content: end;
+    padding: 0 12px 12px 0;
+  }
+
+  .work-card.is-playable .play-overlay {
+    place-content: start;
+    padding: 40px 0 0 12px;
+  }
+
+  .play-overlay i {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .play-overlay b {
+    display: none;
+  }
+}
+
+
+/* ==========================================================================
+   2. LAB DIALOG SHELL
+   ========================================================================== */
+.lab-dialog {
+  width: min(1180px, calc(100vw - 2rem));
+  height: min(800px, calc(100dvh - 2rem));
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 2px solid var(--acid);
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 10px 10px 0 var(--purple);
+  overflow: hidden;
+  font-family: var(--body);
+}
+
+.lab-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  animation: lab-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.lab-dialog::backdrop {
+  background: rgba(7, 7, 7, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+@keyframes lab-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+}
+
+.lab-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.55rem 0.6rem 0.55rem 0.9rem;
+  background: var(--acid);
+  color: var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.lab-bar-id {
+  flex: none;
+  background: var(--ink);
+  color: var(--acid);
+  padding: 0.15rem 0.48rem;
+  font: 700 0.68rem var(--mono);
+}
+
+.lab-title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font: 700 0.95rem / 1.3 var(--head);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lab-close {
+  appearance: none;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font: 700 1rem var(--mono);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.lab-close:hover {
+  background: var(--purple);
+  color: var(--white);
+}
+
+.lab-body {
+  flex: 1;
+  min-height: 0;
+}
+
+.lab-btn {
+  appearance: none;
+  padding: 0.7rem 0.9rem;
+  border: 2px solid var(--acid);
+  background: transparent;
+  color: var(--acid);
+  font: 700 0.72rem var(--mono);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.lab-btn:hover:not(:disabled) {
+  background: var(--acid);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.lab-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.lab-btn-solid {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.lab-btn-solid:hover:not(:disabled) {
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+.lab-dialog :focus-visible {
+  outline-color: var(--pink);
+}
+
+/* ==========================================================================
+   3. CYBER-YANTRA GENERATOR
+   ========================================================================== */
+.yantra-lab {
+  display: grid;
+  grid-template-columns: minmax(280px, 350px) 1fr;
+}
+
+.yantra-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  padding: 1.3rem;
+  border-right: 2px solid rgba(198, 255, 0, 0.35);
+  overflow-y: auto;
+}
+
+.yantra-step {
+  display: block;
+  margin: 0 0 0.45rem;
+  padding: 0;
+  font: 700 0.68rem var(--mono);
+  letter-spacing: 0.1em;
+  color: var(--acid);
+}
+
+.yantra-field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.yantra-input {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 2px solid var(--paper);
+  border-radius: 0;
+  background: transparent;
+  color: var(--paper);
+  font: 600 1.15rem / 1.5 var(--thai-head);
+  letter-spacing: 0;
+}
+
+.yantra-input::placeholder {
+  color: rgba(245, 244, 239, 0.4);
+}
+
+.yantra-input:focus {
+  outline: none;
+  border-color: var(--acid);
+  box-shadow: 4px 4px 0 var(--purple);
+}
+
+.yantra-elements {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.yantra-element {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.yantra-element input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.yantra-element span {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.6rem 0.7rem;
+  border: 2px solid rgba(245, 244, 239, 0.35);
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.yantra-element b {
+  font: 700 0.74rem var(--mono);
+  letter-spacing: 0.08em;
+}
+
+.yantra-element small {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+.yantra-element i {
+  font-style: normal;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  color: var(--el, var(--acid));
+}
+
+.yantra-element:hover span {
+  border-color: var(--el, var(--acid));
+}
+
+.yantra-element input:checked + span {
+  border-color: var(--el, var(--acid));
+  background: var(--el, var(--acid));
+  color: var(--ink);
+}
+
+.yantra-element input:checked + span i {
+  color: var(--ink);
+}
+
+.yantra-element input:focus-visible + span {
+  outline: 3px solid var(--pink);
+  outline-offset: 3px;
+}
+
+.yantra-readout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 0;
+  border: 1px solid rgba(245, 244, 239, 0.25);
+}
+
+.yantra-readout div {
+  padding: 0.5rem 0.65rem;
+  border: 1px solid rgba(245, 244, 239, 0.12);
+}
+
+.yantra-readout dt {
+  font: 700 0.56rem var(--mono);
+  letter-spacing: 0.1em;
+  color: rgba(245, 244, 239, 0.55);
+}
+
+.yantra-readout dd {
+  margin: 0;
+  font: 700 0.92rem var(--mono);
+  color: var(--acid);
+}
+
+.yantra-actions {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.yantra-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: rgba(245, 244, 239, 0.62);
+}
+
+.yantra-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 1.1rem;
+  background:
+    linear-gradient(rgba(198, 255, 0, 0.05) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(198, 255, 0, 0.05) 1px, transparent 1px) 0 0 / 28px 28px;
+  overflow: hidden;
+}
+
+.yantra-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  border: 1px solid rgba(245, 244, 239, 0.3);
+  box-shadow: 8px 8px 0 rgba(142, 44, 255, 0.55);
+}
+
+/* ==========================================================================
+   4. ENERGY PLAYGROUND
+   ========================================================================== */
+.energy-lab {
+  display: flex;
+  flex-direction: column;
+}
+
+.energy-hud {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1.2rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid rgba(198, 255, 0, 0.35);
+  font-family: var(--mono);
+}
+
+.energy-meter {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.8rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.energy-meter > span,
+.energy-stat span {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(245, 244, 239, 0.65);
+}
+
+.energy-meter-bar {
+  height: 18px;
+  border: 2px solid var(--paper);
+  padding: 2px;
+}
+
+.energy-meter-bar i {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--acid) 0 8px, transparent 8px 11px);
+  transition: width 0.2s linear;
+}
+
+.energy-meter > b {
+  min-width: 3.2em;
+  text-align: right;
+  font-size: 1.15rem;
+  color: var(--acid);
+}
+
+.energy-stat {
+  display: grid;
+  gap: 0.05rem;
+  text-align: right;
+}
+
+.energy-stat b {
+  font-size: 0.95rem;
+  color: var(--paper);
+}
+
+.energy-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.energy-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.energy-canvas:active {
+  cursor: grabbing;
+}
+
+.energy-win {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 0.7rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: rgba(7, 7, 7, 0.72);
+  animation: lab-in 0.4s ease;
+}
+
+.energy-win[hidden] {
+  display: none;
+}
+
+.energy-win small {
+  font: 700 0.7rem var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--acid);
+}
+
+.energy-win strong {
+  font: 400 clamp(2.6rem, 8vw, 5.5rem) / 1 var(--cond);
+  color: var(--acid);
+  text-shadow: 4px 4px 0 var(--purple);
+}
+
+.energy-win p {
+  margin: 0 0 0.5rem;
+  max-width: 420px;
+  line-height: 1.75;
+}
+
+.energy-tools {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-top: 2px solid rgba(198, 255, 0, 0.35);
+}
+
+.energy-tools p {
+  margin: 0 0 0 auto;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: rgba(245, 244, 239, 0.62);
+}
+
+/* ==========================================================================
+   5. DESIGN NOTES SECTION
+   ========================================================================== */
+.process {
+  position: relative;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  overflow: hidden;
+}
+
+.process-header {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 420px);
+  gap: 2.5rem;
+  align-items: end;
+  margin-bottom: 2.6rem;
+}
+
+.process-header h2 {
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+}
+
+.process-header > p {
+  margin: 0;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1.2fr 1fr 1fr;
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  background: var(--paper);
+}
+
+.process-cell {
+  padding: 1.3rem;
+  border-right: 2px solid var(--ink);
+  min-width: 0;
+}
+
+.process-cell:last-child {
+  border-right: 0;
+}
+
+.process-cell > span {
+  display: inline-block;
+  margin-bottom: 0.8rem;
+  padding: 0.12rem 0.4rem;
+  background: var(--ink);
+  color: var(--acid);
+  font: 700 0.62rem var(--mono);
+  letter-spacing: 0.1em;
+}
+
+.process-cell h3 {
+  margin: 0 0 0.5rem;
+  font: 700 1.3rem / 1.35 var(--thai-head);
+  letter-spacing: 0;
+}
+
+.process-cell p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.78;
+}
+
+.process-concept {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.process-concept > span {
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.process-concept h3 {
+  color: var(--acid);
+}
+
+.swatches {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+.swatches li {
+  display: grid;
+  gap: 0.2rem;
+  font: 700 0.6rem / 1.4 var(--mono);
+}
+
+.swatches i {
+  display: block;
+  height: 46px;
+  border: 2px solid var(--ink);
+  background: var(--c);
+}
+
+.swatches em {
+  font-style: normal;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.type-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.type-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.type-list b {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.type-list small {
+  font: 400 0.6rem var(--mono);
+  text-align: right;
+}
+
+.tech-tags {
+  list-style: none;
+  margin: 0 0 0.8rem;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tech-tags li {
+  padding: 0.18rem 0.45rem;
+  border: 2px solid var(--ink);
+  font: 700 0.64rem var(--mono);
+  background: #fff;
+  color: var(--ink);
+}
+
+/* ==========================================================================
+   6. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .process-header {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .process-cell:nth-child(2) {
+    border-right: 0;
+  }
+
+  .process-cell:nth-child(-n + 2) {
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .yantra-lab {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+
+  .yantra-controls {
+    order: 2;
+    border-right: 0;
+    border-top: 2px solid rgba(198, 255, 0, 0.35);
+    overflow: visible;
+  }
+
+  .yantra-stage {
+    order: 1;
+    padding: 0.8rem;
+  }
+
+  .yantra-canvas {
+    width: min(100%, 52dvh);
+    max-height: none;
+  }
+
+  .energy-tools p {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .lab-dialog {
+    width: 100vw;
+    height: 100dvh;
+    border-width: 0;
+    box-shadow: none;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-cell {
+    border-right: 0;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .process-cell:last-child {
+    border-bottom: 0;
+  }
+
+  .energy-hud {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 1rem;
+  }
+
+  .energy-meter {
+    grid-column: 1 / -1;
+  }
+
+  .energy-stat {
+    text-align: left;
+  }
+
+  .lab-btn {
+    padding: 0.6rem 0.65rem;
+    font-size: 0.66rem;
+  }
+}
+
+/* ให้ canvas ยันต์พอดีกับพื้นที่แสดงผลเสมอ ไม่ล้นหน้าต่างแล็บ */
+.yantra-lab {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.yantra-stage {
+  container-type: size;
+}
+
+.yantra-canvas {
+  width: min(100cqw, 100cqh);
+  max-width: none;
+  max-height: none;
+}
+
+@media (max-width: 900px) {
+  /* จอแคบ: เรียงเป็นคอลัมน์เดียวแล้วเลื่อนได้ โดยไม่ให้พื้นที่ยันต์ถูกบีบ */
+  .yantra-lab {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .yantra-stage,
+  .yantra-controls {
+    flex: none;
+  }
+
+  .yantra-stage {
+    container-type: normal;
+  }
+
+  .yantra-canvas {
+    width: min(100%, 52dvh);
+  }
+}
